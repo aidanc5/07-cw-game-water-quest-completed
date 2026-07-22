@@ -23,16 +23,18 @@ Fonts:
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Proxima Nova';
   margin: 0;
   padding: 30px;
   background-color: #f0f0f0;
   color: #333;
+  min-height: 100vh;
 }
 
 .container {
   max-width: 750px;
-  margin: 50px auto;
+  width: 100%;
+  margin: 50px auto 80px;
   background-color: #fff;
   padding: 40px;
   border-radius: 10px;
@@ -45,6 +47,7 @@ h1 {
   font-weight: bold;
   margin-bottom: 20px;
   color: #333;
+  font-family: 'Proxima Nova';
 }
 
 h1 img {
@@ -159,11 +162,51 @@ button {
   transition: background-color 0.2s;
 }
 
+.difficulty-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0 10px;
+}
+
+.difficulty-controls label {
+  font-weight: bold;
+  color: #333;
+  font-family: 'Proxima Nova';
+}
+
+.difficulty-controls select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: 'Proxima Nova';
+}
+
 .button-row {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: 10px;
+}
+
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  text-align: center;
+  z-index: 10;
+}
+
+.site-footer a {
+  color: #2E9DF7;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
 }
 
 .reset-button {

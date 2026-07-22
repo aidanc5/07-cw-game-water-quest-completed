@@ -6,6 +6,7 @@ let gameActive = false;      // Tracks if game is currently running
 let spawnInterval;          // Holds the interval for spawning items
 let timerInterval;          // Holds the interval for the countdown timer
 let timeLeft = TIME_LIMIT;  // Seconds remaining in the game
+let currentDifficulty = 'medium';
 
 // Creates the 3x3 game grid where items will appear
 function createGrid() {
@@ -33,7 +34,19 @@ function updateAchievementMessage(message = '') {
 // Ensure the grid is created when the page loads
 createGrid();
 
-// Spawns one good target and one bad target in separate random grid cells
+function getDifficultyConfig() {
+  switch (currentDifficulty) {
+    case 'easy':
+      return { positiveCells: 1, negativeCells: 0 };
+    case 'hard':
+      return { positiveCells: 1, negativeCells: 8 };
+    case 'medium':
+    default:
+      return { positiveCells: 1, negativeCells: 1 };
+  }
+}
+
+// Spawns targets based on the selected difficulty
 function spawnWaterCan() {
   if (!gameActive) return; // Stop if the game is not active
   const cells = document.querySelectorAll('.grid-cell');
@@ -42,20 +55,38 @@ function spawnWaterCan() {
   cells.forEach(cell => (cell.innerHTML = ''));
 
   const availableCells = Array.from(cells);
-  const firstCell = availableCells[Math.floor(Math.random() * availableCells.length)];
-  const secondCell = availableCells.filter(cell => cell !== firstCell)[Math.floor(Math.random() * (availableCells.length - 1))];
+  const difficultyConfig = getDifficultyConfig();
+  const positiveCell = availableCells[Math.floor(Math.random() * availableCells.length)];
 
-  firstCell.innerHTML = `
+  positiveCell.innerHTML = `
     <div class="water-can-wrapper">
       <div class="water-can" role="button" tabindex="0" aria-label="Collect water can"></div>
     </div>
   `;
 
-  secondCell.innerHTML = `
-    <div class="water-can-wrapper">
-      <div class="water-droplet" role="button" tabindex="0" aria-label="Avoid bacteria"></div>
-    </div>
-  `;
+  if (difficultyConfig.negativeCells === 0) {
+    return;
+  }
+
+  const otherCells = availableCells.filter(cell => cell !== positiveCell);
+
+  if (difficultyConfig.negativeCells === 1) {
+    const negativeCell = otherCells[Math.floor(Math.random() * otherCells.length)];
+    negativeCell.innerHTML = `
+      <div class="water-can-wrapper">
+        <div class="water-droplet" role="button" tabindex="0" aria-label="Avoid bacteria"></div>
+      </div>
+    `;
+    return;
+  }
+
+  otherCells.forEach(cell => {
+    cell.innerHTML = `
+      <div class="water-can-wrapper">
+        <div class="water-droplet" role="button" tabindex="0" aria-label="Avoid bacteria"></div>
+      </div>
+    `;
+  });
 }
 
 function handleCanClick(event) {
@@ -129,3 +160,6 @@ function resetGame() {
 document.getElementById('start-game').addEventListener('click', startGame);
 document.getElementById('reset-game').addEventListener('click', resetGame);
 document.querySelector('.game-grid').addEventListener('click', handleCanClick);
+document.getElementById('difficulty-select').addEventListener('change', (event) => {
+  currentDifficulty = event.target.value;
+});
